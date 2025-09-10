@@ -1,20 +1,15 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is  Next.js app with back-end example to store social post . DB using Prisma and PostgreSQL (via Docker)
 
-## Getting Started
+## How to run
 
-First, run the development server:
+Run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev -- -p 4001
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:4001](http://localhost:4001)
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
