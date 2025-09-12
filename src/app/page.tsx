@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 export default function HomePage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
 
   // Lấy danh sách bài viết
@@ -20,19 +21,27 @@ export default function HomePage() {
     const res = await fetch("/api/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, content }),
+      body: JSON.stringify({ title, content, slug }),
     });
     const newPost = await res.json();
     setPosts([newPost, ...posts]);
     setTitle("");
     setContent("");
+    setSlug("");
   };
 
   return (
     <main className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Viết bài mới</h1>
+      <h1 className="text-2xl font-bold mb-4">Admin Site - Viết bài mới</h1>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-3">
+        <input
+          type="text"
+          placeholder="Slug"
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+          className="w-full border p-2 rounded"
+        />
         <input
           type="text"
           placeholder="Tiêu đề"
@@ -60,6 +69,7 @@ export default function HomePage() {
           <div key={post.id} className="border p-4 rounded">
             <h3 className="font-bold text-lg">{post.title}</h3>
             <p>{post.content}</p>
+            <p>Slug para URL: {post.slug}</p>
             <small className="text-gray-500">
               {new Date(post.createdAt).toLocaleString()}
             </small>

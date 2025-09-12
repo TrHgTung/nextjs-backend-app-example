@@ -1,33 +1,24 @@
-import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
+import { getAllPosts, createPost } from "@/controllers/postController";
 
-const prisma = new PrismaClient();
-
-// GET /api/posts -> lấy danh sách bài viết
+// GET /api/posts
 export async function GET() {
-  const posts = await prisma.post.findMany({
-    orderBy: { createdAt: "desc" }
-  });
-  return Response.json(posts);
+  const posts = await getAllPosts();
+  return NextResponse.json(posts);
 }
 
-// POST /api/posts -> tạo bài viết mới
-export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-    if (!body.title || !body.content) {
-      return new Response(JSON.stringify({ error: "Missing fields" }), { status: 400 });
-    }
+// POST /api/posts
+export async function POST(request: Request) {
+  const body = await request.json();
+  const { title, content, slug } = body;
 
-    const post = await prisma.post.create({
-      data: {
-        title: body.title,
-        content: body.content,
-      },
-    });
-
-    return Response.json(post);
-  } catch (err) {
-    console.error(err);
-    return new Response(JSON.stringify({ error: "Server error" }), { status: 500 });
+  if (!title || !content) {
+    return NextResponse.json(
+      { error: "Missing title or content" },
+      { status: 400 }
+    );
   }
+
+  const newPost = await createPost({ title, content, slug });
+  return NextResponse.json(newPost, { status: 201 });
 }
